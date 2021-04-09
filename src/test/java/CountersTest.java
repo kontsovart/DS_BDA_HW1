@@ -1,13 +1,15 @@
-import eu.bitwalker.useragentutils.UserAgent;
+import bdtc.lab1.tools.metricIdWritable;
 import bdtc.lab1.CounterType;
 import bdtc.lab1.HW1Mapper;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mrunit.mapreduce.MapDriver;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -15,21 +17,25 @@ import static org.junit.Assert.assertEquals;
 
 public class CountersTest {
 
-    private MapDriver<LongWritable, Text, Text, IntWritable> mapDriver;
+    private MapDriver<LongWritable, Text, metricIdWritable, FloatWritable> mapDriver;
 
-    private final String testMalformedIP = "mama mila ramu";
-    private final String testIP = "ip1 - - [24/Apr/2011:04:06:01 -0400] \"GET /~strabal/grease/photo9/927-3.jpg HTTP/1.1\" 200 40028 \"-\" \"Mozilla/5.0 (compatible; YandexImages/3.0; +http://yandex.com/bots)\"\n";
+    private final String testMalformedMetric = "mama mila ramu";
+    private final String testValidMetric = "1,1510670916247,10.56";
+
 
     @Before
-    public void setUp() {
+    public void setup(){
         HW1Mapper mapper = new HW1Mapper();
-        mapDriver = MapDriver.newMapDriver(mapper);
+        mapDriver = new MapDriver<>(mapper);
+        mapDriver.addCacheFile(new File("src/test/files/metric").getAbsolutePath());
+        Configuration conf = mapDriver.getConfiguration();
+        conf.set("metricScale", "60000");
     }
 
     @Test
     public void testMapperCounterOne() throws IOException  {
         mapDriver
-                .withInput(new LongWritable(), new Text(testMalformedIP))
+                .withInput(new LongWritable(), new Text(testMalformedMetric))
                 .runTest();
         assertEquals("Expected 1 counter increment", 1, mapDriver.getCounters()
                 .findCounter(CounterType.MALFORMED).getValue());
@@ -37,10 +43,10 @@ public class CountersTest {
 
     @Test
     public void testMapperCounterZero() throws IOException {
-        UserAgent userAgent = UserAgent.parseUserAgentString(testIP);
         mapDriver
-                .withInput(new LongWritable(), new Text(testIP))
-                .withOutput(new Text(userAgent.getBrowser().getName()), new IntWritable(1))
+                .withInput(new LongWritable(), new Text(testValidMetric))
+                .withOutput(new metricIdWritable("device_1", 1510670880000L, "1m"),
+                        new FloatWritable(((float) 10.56)))
                 .runTest();
         assertEquals("Expected 1 counter increment", 0, mapDriver.getCounters()
                 .findCounter(CounterType.MALFORMED).getValue());
@@ -48,16 +54,15 @@ public class CountersTest {
 
     @Test
     public void testMapperCounters() throws IOException {
-        UserAgent userAgent = UserAgent.parseUserAgentString(testIP);
         mapDriver
-                .withInput(new LongWritable(), new Text(testIP))
-                .withInput(new LongWritable(), new Text(testMalformedIP))
-                .withInput(new LongWritable(), new Text(testMalformedIP))
-                .withOutput(new Text(userAgent.getBrowser().getName()), new IntWritable(1))
+                .withInput(new LongWritable(), new Text(testValidMetric))
+                .withInput(new LongWritable(), new Text(testMalformedMetric))
+                .withInput(new LongWritable(), new Text(testMalformedMetric))
+                .withOutput(new metricIdWritable("device_1", 1510670880000L, "1m"),
+                        new FloatWritable(((float) 10.56)))
                 .runTest();
 
         assertEquals("Expected 2 counter increment", 2, mapDriver.getCounters()
                 .findCounter(CounterType.MALFORMED).getValue());
     }
 }
-

@@ -25,7 +25,7 @@ public class MapReduceApplication {
             throw new RuntimeException("You should specify input folder, output folder, scale!");
         }
         Configuration conf = new Configuration();
-        // задаём выходной файл, разделенный запятыми - формат CSV в соответствии с заданием
+
         conf.set("metricScale", args[3]);
 
         Job job = Job.getInstance(conf, "browser count");

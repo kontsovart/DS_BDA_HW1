@@ -1,11 +1,8 @@
 package bdtc.lab1.tools;
 
-
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.TaskInputOutputContext;
 
 import java.io.BufferedReader;
@@ -27,7 +24,7 @@ public class MetricNameResolver {
         URI[] paths = context.getCacheFiles();
         Path path = null;
         for(URI u : paths) {
-            if (u.getPath().toLowerCase().contains("mapping")) {
+            if (u.getPath().toLowerCase().contains("metric")) {
                 path = new Path(u.getPath());
             }
         }

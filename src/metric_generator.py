@@ -98,9 +98,9 @@ if __name__ == '__main__':
         number_errors = args.errors
 
     genius_iterator = RowsIterator(number_rows, step, start_time, number_devices, number_errors)
-#     with open("output_data", 'w') as output_file:
-#         for row in genius_iterator:
-#             output_file.write(row + '\n')
+    with open("output_data", 'w') as output_file:
+        for row in genius_iterator:
+            output_file.write(row + '\n')
     with open("metric_resolver", 'w') as metric_resolver:
         for item in range(1, number_devices):
-            metric_resolver.write(f"device_{item}" + '\n')
+            metric_resolver.write(f"{item},device_{item}" + '\n')
