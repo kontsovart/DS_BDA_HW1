@@ -68,8 +68,8 @@ public class MapReduceTest {
     @Test
     public void testMapperAndReducer() throws IOException {
         String validRow2 = "1,1510670916249,50.0";
-        String malformedRow = "aaaa  jnkj lnn";
-        String malformedDevice = "198,1510670916247,14.56";
+        String malformedRow = "mama mila ramu";
+        String malformedDevice = "23,151067091333,200";
         mapReduceDriver
                 .withInput(new LongWritable(), new Text(testValidMetric))
                 .withInput(new LongWritable(), new Text(malformedRow))
