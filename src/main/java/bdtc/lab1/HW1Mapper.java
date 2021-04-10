@@ -83,7 +83,7 @@ public class HW1Mapper extends Mapper<LongWritable, Text, metricIdWritable, Floa
             }
             else throw new IOException(String.format("Len string params != 3 at %d", key.get()));
         }
-        catch (IOException | InterruptedException error){
+        catch (IOException | InterruptedException | NumberFormatException error){
             context.getCounter(CounterType.MALFORMED).increment(1);
         }
     }

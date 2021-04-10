@@ -89,12 +89,17 @@ public class metricIdWritable implements WritableComparable<metricIdWritable> {
     /**
      * Override of toString() method
      */
+//    @Override
+//    public String toString() {
+//        return "metricIdWritable{" +
+//                "metricId=" + metricName +
+//                ", metricTimestamp=" + metricTimestamp +
+//                ", scaleText='" + scaleText + '\'' +
+//                '}';
+//    }
     @Override
     public String toString() {
-        return "metricIdWritable{" +
-                "metricId=" + metricName +
-                ", metricTimestamp=" + metricTimestamp +
-                ", scaleText='" + scaleText + '\'' +
-                '}';
+        return
+                metricName +','+ metricTimestamp +','+ scaleText + ",";
     }
 }
