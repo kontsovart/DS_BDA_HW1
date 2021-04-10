@@ -18,7 +18,7 @@ public class HW1Reducer extends Reducer<metricIdWritable, FloatWritable, metricI
 
 
     /**
-     * Reduce function. Calculates average value in given interval
+     * override map map function to average metrics
      * @param metric key
      * @param values iterable of values
      * @param context reducer context

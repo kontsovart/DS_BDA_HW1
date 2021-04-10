@@ -19,6 +19,12 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 @Log4j
 public class MapReduceApplication {
 
+    /**
+     * Entry point for the application
+     *
+     * @param args Optional arguments: InputDirectory, OutputDirectory, AggregationInterval
+     * @throws Exception when args not chosen
+     */
     public static void main(String[] args) throws Exception {
 
         if (args.length < 3) {
@@ -26,20 +32,24 @@ public class MapReduceApplication {
         }
         Configuration conf = new Configuration();
 
-        conf.set("metricScale", args[3]);
+        conf.set("metricScale", args[2]);
 
         Job job = Job.getInstance(conf, "browser count");
         job.setJarByClass(MapReduceApplication.class);
         job.setMapperClass(HW1Mapper.class);
         job.setReducerClass(HW1Reducer.class);
 
-        job.addCacheFile(new Path("hdfs://localhost:9000/dataflair/jar_file.jar").toUri());
+        job.addCacheFile(new Path("hdfs://localhost:9000/user/centos/resolver/metric_resolver").toUri());
 
         job.setMapOutputKeyClass(metricIdWritable.class);
         job.setMapOutputValueClass(FloatWritable.class);
-        job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         job.setInputFormatClass(TextInputFormat.class);
+        job.setOutputFormatClass(SequenceFileOutputFormat.class);
+
+        job.setOutputKeyClass(metricIdWritable.class);
+        job.setOutputValueClass(FloatWritable.class);
+
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));

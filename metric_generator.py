@@ -1,6 +1,7 @@
 import random
 import argparse
 import time
+import os
 from collections import Iterator
 
 
@@ -64,15 +65,15 @@ def get_errors_row():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--start_time', type=str,
+    parser.add_argument('-s', '--start_time', type=int,
                         help='start time')
-    parser.add_argument('-n', '--number_rows', type=str,
+    parser.add_argument('-n', '--number_rows', type=int,
                         help='number rows')
-    parser.add_argument('-t', '--step', type=str,
+    parser.add_argument('-t', '--step', type=int,
                         help='step')
-    parser.add_argument('-d', '--number_devices', type=str,
+    parser.add_argument('-d', '--number_devices', type=int,
                         help='number devices')
-    parser.add_argument('-e', '--errors', type=str,
+    parser.add_argument('-e', '--errors', type=int,
                         help='invalid rows count')
 
     args = parser.parse_args()
@@ -98,9 +99,16 @@ if __name__ == '__main__':
         number_errors = args.errors
 
     genius_iterator = RowsIterator(number_rows, step, start_time, number_devices, number_errors)
+    if not os.path.isdir("input"):
+        os.mkdir("input")
+
+    if not os.path.isdir("resolver"):
+            os.mkdir("resolver")
+    os.chdir("input")
     with open("output_data", 'w') as output_file:
         for row in genius_iterator:
             output_file.write(row + '\n')
+    os.chdir("../resolver")
     with open("metric_resolver", 'w') as metric_resolver:
         for item in range(1, number_devices):
             metric_resolver.write(f"{item},device_{item}" + '\n')

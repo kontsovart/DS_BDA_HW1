@@ -15,10 +15,10 @@ import java.net.URI;
 public class MetricNameResolver {
 
     /**
-     * Static method that reads mapping
+     * function to resolve metric names
      * @param context hadoop configuration class
-     * @return Map id -> name
-     * @throws IOException when file can not be opened or file has incorrect internal structure
+     * @return Map metricMap
+     * @throws IOException failed to get URI or parse file
      */
     public static Map<Integer, String> resolve(TaskInputOutputContext context) throws IOException {
         URI[] paths = context.getCacheFiles();

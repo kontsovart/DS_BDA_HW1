@@ -31,35 +31,6 @@ public class HW1Mapper extends Mapper<LongWritable, Text, metricIdWritable, Floa
      */
     @Override
     protected void setup(Context context) throws IOException{
-//
-//        metricName = MetricNameResolver.resolve(context);
-//        try {
-//            scale = Integer.parseInt(context.getConfiguration().get("metricScale"));
-//            scaleText = "";
-//            long millis = scale % 1000;
-//            long second = (scale / 1000) % 60;
-//            long minute = (scale / (1000 * 60)) % 60;
-//            long hour = (scale / (1000 * 60 * 60)) % 24;
-//
-//            if (hour> 0){
-//                scaleText += String.format("%dh", hour);
-//            }
-//            if (minute> 0){
-//                scaleText += String.format("%dm", minute);
-//            }
-//            if (second> 0){
-//                scaleText += String.format("%ds", second);
-//            }
-//            if (millis> 0){
-//                scaleText += String.format("%dms", millis);
-//            }
-//
-////            metricName = MetricNameResolver.resolve(context);
-//
-//        }
-//        catch (Exception exception){
-//            throw new IOException();
-//        }
         metricName = MetricNameResolver.resolve(context);
         scale = Integer.parseInt(context.getConfiguration().get("metricScale"));
         scaleText = "";
@@ -83,7 +54,7 @@ public class HW1Mapper extends Mapper<LongWritable, Text, metricIdWritable, Floa
     }
 
     /**
-     * Map function. Truncates timestamp according to interval for aggregating. Checks data for correctness.
+     * override map map function to agregate metrics
      * Uses counters {@link CounterType}
      * @param key input key
      * @param value input value
